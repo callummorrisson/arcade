@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/src/games/*/game.manifest.json"
+            ],
+            "url": "/game.manifest.schema.json"
+        }
+    ]
+}

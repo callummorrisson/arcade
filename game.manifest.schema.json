@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique id for this game, will be used in the URL"
+    },
+    "name": { "type": "string" },
+    "description": { "type": "string" }
+  },
+  "required": ["id", "name", "description"]
+}

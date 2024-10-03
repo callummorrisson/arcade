@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# this is generated at compile time, at this point we don't want to track it
+public/games.db.json
