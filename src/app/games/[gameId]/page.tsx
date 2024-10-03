@@ -1,4 +1,3 @@
-import useDataService from "@/data/api/use-data-service";
 import Game from "./game";
 import gamesDb from '@/../public/games.db.json';
 

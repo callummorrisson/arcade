@@ -6,16 +6,22 @@ type ServiceOptions = {
   games: GameServiceContract;
 };
 
-const mockServices: ServiceOptions = {
-  games: new GameServiceFromJson(),
+const getServices = () => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+  // todo would likely do some kind of switch here
+  return {
+    games: new GameServiceFromJson(basePath),
+  };
 };
 
 export default function useDataService<
   TService extends ServiceOptions[keyof ServiceOptions]
 >(serviceLink: (services: ServiceOptions) => TService): TService {
-  
-  // todo would likely do some kind of switch here
-  const service = serviceLink(mockServices);
+
+  const services = useMemo(() => getServices(), []);
+
+  const service = serviceLink(services);
 
   return service;
 }

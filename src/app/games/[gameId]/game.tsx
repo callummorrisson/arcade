@@ -12,7 +12,7 @@ export default function Game({ gameId }: GamePageParams) {
 
   useEffect(() => {
     const getGameDetails = async () => {
-      var details = await gamesService.getGameDetails(gameId);
+      const details = await gamesService.getGameDetails(gameId);
       if (details) setMan(details);
     };
 

@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import useDataService from "@/data/api/use-data-service";
 import { useEffect, useState } from "react";
 import { GameDetails } from "@/data/types/game-details";
@@ -20,7 +19,7 @@ export default function Home() {
   return (
     <>
       {games.map((x) => (
-        <div>
+        <div key={x.id}>
           <Link href={`/games/${x.id}`}>{x.name}</Link>
         </div>
       ))}
