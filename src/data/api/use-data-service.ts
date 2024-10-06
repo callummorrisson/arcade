@@ -19,9 +19,9 @@ export default function useDataService<
   TService extends ServiceOptions[keyof ServiceOptions]
 >(serviceLink: (services: ServiceOptions) => TService): TService {
 
+  // todo this is gross
   const services = useMemo(() => getServices(), []);
-
-  const service = serviceLink(services);
+  const service = useMemo(() => serviceLink(services), [services, serviceLink]);
 
   return service;
 }

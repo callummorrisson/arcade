@@ -1,0 +1,23 @@
+.body {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "content"
+    "footer";
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  overflow-y: hidden;
+
+  .header {
+    grid-area: header;
+  }
+
+  .content {
+    grid-area: content;
+    overflow-y: auto;
+  }
+
+  .footer {
+    grid-area: footer;
+  }
+}

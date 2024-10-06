@@ -1,0 +1,17 @@
+:root {
+  --bg-main: #ffffff;
+  --fg-main: #171717;
+
+  --bg-menu: #f7f7f7;
+  --fg-menu: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: #0a0a0a;
+    --fg-main: #ededed;
+
+    --bg-menu: #1a1a1a;
+    --fg-menu: #ededed;
+  }
+}

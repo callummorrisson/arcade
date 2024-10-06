@@ -1,0 +1,76 @@
+@import "@/styles/variables";
+
+$icon-size: 2rem;
+
+.menu-button {
+  position: relative;
+
+  .menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $icon-size;
+    cursor: pointer;
+    padding: .75rem;
+    border-radius: 50%;
+
+    &:hover {
+      background: $bg-menu;
+    }
+  }
+
+  nav {
+    position: absolute;
+    left: 0;
+    top: 100%;
+
+    background: $bg-menu;
+    color: $fg-menu;
+
+    max-height: 0;
+    overflow: hidden;
+
+    width: 17rem;
+    padding: 0;
+    border-radius: 0.5rem;
+
+    ul {
+      list-style: none;
+      text-align: left;
+
+      gap: 0.25rem;
+      padding: 0.25rem;
+      
+
+      li a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        i {
+          font-size: $icon-size;
+        }
+        span {
+          font-size: 1.5rem;
+          margin-left: .5rem;
+        }
+      }
+    }
+
+    &,
+    & * {
+      text-wrap: nowrap;
+    }
+  }
+
+  &:focus,
+  &:focus-within {
+    nav {
+      max-height: 100vh;
+      padding: 0.5rem;
+    }
+  }
+}
+
+.logo {
+  font-size: 2.5rem;
+}

@@ -14,7 +14,7 @@ export default function Home() {
       setGames(games);
     };
     getGames();
-  }, []);
+  }, [gameService]);
 
   return (
     <>

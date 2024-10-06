@@ -17,7 +17,7 @@ export default function Game({ gameId }: GamePageParams) {
     };
 
     if (gameId) getGameDetails();
-  }, [gameId]);
+  }, [gamesService, gameId]);
 
   return (
     <>
