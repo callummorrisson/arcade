@@ -1,0 +1,67 @@
+.results-container {
+  width: 100%;
+  height: 100%;
+  gap: 0.5rem;
+
+  > .item {
+    display: grid;
+
+    .item-thumbnail {
+      grid-area: thumb;
+      aspect-ratio: 1/1;
+      border-radius: 0.25rem;
+    }
+
+    .item-name {
+      grid-area: name;
+      font-weight: bold;
+    }
+    .item-price {
+      grid-area: price;
+      font-weight: bolder;
+      text-align: right;
+
+      &:before {
+        content: '$';
+      }
+    }
+
+    .item-add {
+      grid-area: button;
+      font-size: 2rem;
+      height: 3rem;
+    }
+  }
+
+  &.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40ch, 1fr));
+
+    > .item {
+      grid-template-areas:
+        "thumb thumb"
+        "name price"
+        "button button";
+
+      .item-thumbnail {
+        width: 100%;
+      }
+    }
+  }
+
+  &.results-list {
+    display: flex;
+    flex-direction: column;
+
+    > .item {
+      grid-template-areas:
+        "thumb name price x "
+        "thumb rating price button";
+        grid-template-columns: auto auto auto 40ch;
+
+        .item-thumbnail {
+          max-height: 4rem;
+        }
+    }
+  }
+}

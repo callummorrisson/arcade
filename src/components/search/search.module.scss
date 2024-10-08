@@ -1,0 +1,27 @@
+.search {
+  display: grid;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar results"
+    "sidebar pagination";
+
+  grid-template-columns: auto 1fr;
+  grid-template-rows:  auto 1fr auto;
+  margin: 0 1rem;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.topbar{
+  grid-area: topbar;
+}
+
+.results {
+  grid-area: results;
+}
+
+.pagination {
+  grid-area: pagination;
+}

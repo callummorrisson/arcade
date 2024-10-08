@@ -1,0 +1,41 @@
+$color-background-highlight: red;
+$color-secondary: blue;
+
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.display {
+  display: flex;
+  flex-direction: row;
+
+  input[type="radio"] {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  label {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.25rem;
+
+    &:has(input:checked) {
+      background: $color-background-highlight;
+    }
+  }
+}
+
+.sort {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
