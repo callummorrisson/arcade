@@ -1,11 +1,11 @@
 import GameDetailsModel from "../models/game-details.model";
-import { PagedQuery } from "../types/paged-query.type";
-import { PagedResult } from "../types/paged-result.type";
+import { SearchModel } from "../models/search.model";
+import { SearchResultsModel } from "../models/search-results.model";
 
 export default interface GameServiceContract {
   getAll(): Promise<GameDetailsModel[]>;
   search(
-    query: PagedQuery<GameDetailsModel>
-  ): Promise<PagedResult<GameDetailsModel>>;
+    query: SearchModel
+  ): Promise<SearchResultsModel>;
   getGameDetails(gameId: string): Promise<GameDetailsModel | undefined>;
 }

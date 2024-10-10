@@ -1,6 +1,6 @@
+@import '@/styles/variables';
+
 $option-height: 2rem;
-$color-background-highlight: red;
-$color-secondary: blue;
 
 .dropdown {
   display: inline-flex;
@@ -15,7 +15,7 @@ $color-secondary: blue;
   position: relative;
 
   &:focus {
-    background: $color-background-highlight;
+    background: $bg-input;
     .options-container {
       max-height: 100rem;
     }
@@ -54,7 +54,7 @@ $color-secondary: blue;
       height: auto;
       overflow-x: hidden;
       overflow-y: auto;
-      background: $color-background-highlight;
+      background: $bg-input;
 
       display: flex;
       flex-direction: column;
@@ -74,7 +74,13 @@ $color-secondary: blue;
         height: $option-height;
 
         &:has(:checked) {
-          background: $color-secondary;
+          background: $bg-input-selected;
+          color: $fg-input-selected;
+        }
+
+        &:hover {
+          background: $bg-input-hover;
+          color: $fg-input-hover;
         }
 
         > input[type="radio"] {

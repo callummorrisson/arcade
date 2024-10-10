@@ -5,8 +5,7 @@
     "content"
     "footer";
   grid-template-rows: auto 1fr auto;
-  height: 100vh;
-  overflow-y: hidden;
+  min-height: 100vh;
 
   .header {
     grid-area: header;
@@ -14,7 +13,6 @@
 
   .content {
     grid-area: content;
-    overflow-y: auto;
   }
 
   .footer {

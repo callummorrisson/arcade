@@ -1,13 +1,12 @@
 "use client";
 
-import { PagedResult } from "@/data/types/paged-result.type";
+import { SearchResultsModel } from "@/data/models/search-results.model";
 import {
   FieldFilters,
   FilterOperators,
-  PagedQuery,
+  SearchModel,
   QueryFilters,
-} from "@/data/types/paged-query.type";
-import { ItemBase } from "@/data/types/item-base.type";
+} from "@/data/models/search.model";
 import {
   ReadonlyURLSearchParams,
   usePathname,
@@ -15,6 +14,7 @@ import {
 } from "next/navigation";
 import { useEffect } from "react";
 import createStore, { Store } from "@/utils/create-store";
+import GameDetailsModel from "@/data/models/game-details.model";
 
 const STORAGE_KEY = "product-list-params"; // params key for local storage
 
@@ -27,64 +27,60 @@ enum UrlQueryParam {
   Display = "display",
 }
 
-export interface SearchParams<TItem extends ItemBase>
-  extends PagedQuery<TItem> {
+export interface SearchParams extends SearchModel {
   display: "list" | "grid";
-  displayTemplates: {list?: React.FC<TItem>, grid?: React.FC<TItem> }
 }
 
-export interface SearchResults<TItem extends ItemBase>
-  extends PagedResult<TItem> {
+export interface SearchResults extends SearchResultsModel {
   isLoading: boolean;
 }
 
-const SearchParamsStore = createStore<SearchParams<ItemBase>>();
+const SearchParamsStore = createStore<SearchParams>();
 
-const ResultsStore = createStore<SearchResults<ItemBase>>();
+const ResultsStore = createStore<SearchResults>();
 
-export function useSearchParams<
-  TItem extends ItemBase,
-  TResults
->(accessor: (store: SearchParams<TItem>) => TResults): TResults {
-  return (SearchParamsStore as Store<SearchParams<TItem>>).useStore(accessor);
+export function useSearchParams<TResults>(
+  accessor: (store: SearchParams) => TResults
+): TResults {
+  return SearchParamsStore.useStore(accessor);
 }
 
-export function useSearchParamsUpdater<TItem extends ItemBase = ItemBase>() {
-  return (SearchParamsStore as Store<SearchParams<TItem>>).useStoreUpdater();
+export function useSearchParamsUpdater() {
+  return SearchParamsStore.useStoreUpdater();
 }
 
-export function useSearchResults<TItem extends ItemBase, TResults>(
-  accessor: (store: SearchResults<TItem>) => TResults
+export function useSearchResults<TResults>(
+  accessor: (store: SearchResults) => TResults
 ) {
-  return (ResultsStore as Store<SearchResults<TItem>>).useStore(accessor);
+  return (ResultsStore as Store<SearchResults>).useStore(accessor);
 }
 
-export function useProductResultsUpdater<TItem extends ItemBase = ItemBase>() {
-  return (ResultsStore as Store<SearchResults<TItem>>).useStoreUpdater();
+export function useProductResultsUpdater() {
+  return ResultsStore.useStoreUpdater();
 }
 
-export function SearchProvider<TItem extends ItemBase>({
+export function SearchProvider({
   children,
   initialParams,
   resultsFunc,
 }: Readonly<{
   children: React.ReactNode;
-  initialParams?: Partial<SearchParams<TItem>>;
-  resultsFunc: (query: PagedQuery<TItem>) => Promise<PagedResult<TItem>>;
+  initialParams?: Partial<SearchParams>;
+  resultsFunc: (query: SearchModel) => Promise<SearchResultsModel>;
 }>) {
   const searchParams = useURLSearchParams();
-  const initialValue = getInitialParams<TItem>(searchParams, initialParams);
+  const initialValue = getInitialParams(searchParams, initialParams);
   return (
-    <SearchParamsStore.Provider initialValue={initialValue as SearchParams<ItemBase>}>
+    <SearchParamsStore.Provider initialValue={initialValue as SearchParams}>
       <ResultsStore.Provider initialValue={getInitialResults()}>
-        <StateManager<TItem> resultsFunc={resultsFunc} />
+        <StateManager resultsFunc={resultsFunc} />
         {children}
       </ResultsStore.Provider>
     </SearchParamsStore.Provider>
   );
 }
 
-function getInitialResults<TItem extends ItemBase>(): SearchResults<TItem> {
+function getInitialResults(): SearchResults {
   return {
     isLoading: false,
     results: [],
@@ -93,12 +89,12 @@ function getInitialResults<TItem extends ItemBase>(): SearchResults<TItem> {
   };
 }
 
-function StateManager<TItem extends ItemBase>({
+function StateManager({
   resultsFunc,
 }: Readonly<{
-  resultsFunc: (query: PagedQuery<TItem>) => Promise<PagedResult<TItem>>;
+  resultsFunc: (query: SearchModel) => Promise<SearchResultsModel>;
 }>) {
-  const searchParams = useSearchParams((x: SearchParams<TItem>) => x);
+  const searchParams = useSearchParams((x: SearchParams) => x);
   const resultsUpdater = useProductResultsUpdater();
   const pathname = usePathname();
 
@@ -137,8 +133,7 @@ function StateManager<TItem extends ItemBase>({
 
     let field: keyof typeof searchParams.filters;
     for (field in searchParams.filters) {
-      const fieldFilters: FieldFilters<TItem[typeof field]> =
-        searchParams.filters[field]!;
+      const fieldFilters = searchParams.filters[field]!;
 
       let operator: Extract<keyof typeof fieldFilters, string>;
       for (operator in fieldFilters) {
@@ -196,13 +191,12 @@ function updateUrlQueryString(pathname: string, searchParams: URLSearchParams) {
   );
 }
 
-function getInitialParams<TItem extends ItemBase>(
+function getInitialParams(
   urlQueryParams: ReadonlyURLSearchParams,
-  overrideParams?: Partial<SearchParams<TItem>>
-): SearchParams<TItem> {
-  const defaultParams: SearchParams<TItem> = {
+  overrideParams?: Partial<SearchParams>
+): SearchParams {
+  const defaultParams: SearchParams = {
     display: "grid",
-    displayTemplates: { },
     filters: {},
     pageNumber: 1,
     pageSize: 12,
@@ -210,16 +204,14 @@ function getInitialParams<TItem extends ItemBase>(
     sortBy: "name",
   };
 
-  const storedParams = readParamsFromLocalStorageOrDefault<TItem>();
-  const urlParams = readParamsFromUrlQuery<TItem>(urlQueryParams);
+  const storedParams = readParamsFromLocalStorageOrDefault();
+  const urlParams = readParamsFromUrlQuery(urlQueryParams);
   return { ...defaultParams, ...storedParams, ...urlParams, ...overrideParams };
 }
 
-function readParamsFromLocalStorageOrDefault<TItem extends ItemBase>(): Partial<
-  SearchParams<TItem>
-> {
+function readParamsFromLocalStorageOrDefault(): Partial<SearchParams> {
   const paramsJson = localStorage.getItem(STORAGE_KEY);
-  let params: Partial<SearchParams<TItem>> = {};
+  let params: Partial<SearchParams> = {};
   try {
     if (paramsJson !== null) params = JSON.parse(paramsJson);
   } catch {
@@ -230,21 +222,24 @@ function readParamsFromLocalStorageOrDefault<TItem extends ItemBase>(): Partial<
   return params;
 }
 
-function readParamsFromUrlQuery<TItem extends ItemBase>(
+function readParamsFromUrlQuery(
   urlQueryParams: ReadonlyURLSearchParams
-): Partial<SearchParams<TItem>> {
-  const result: Partial<SearchParams<TItem>> = {};
-  const filters = readFilterValuesFromUrlQuery<TItem>(urlQueryParams);
+): Partial<SearchParams> {
+  const result: Partial<SearchParams> = {};
+  const filters = readFilterValuesFromUrlQuery(urlQueryParams);
   result.filters = filters;
 
   if (urlQueryParams.has(UrlQueryParam.Display)) {
     // todo bad "any", should validate properly
-    result.display = urlQueryParams.get(UrlQueryParam.Display)! as "list" | "grid";
+    result.display = urlQueryParams.get(UrlQueryParam.Display)! as
+      | "list"
+      | "grid";
   }
 
   if (urlQueryParams.has(UrlQueryParam.SortBy)) {
     // todo bad "any", should validate properly
-    result.sortBy = urlQueryParams.get(UrlQueryParam.SortBy)! as (string & keyof TItem);
+    result.sortBy = urlQueryParams.get(UrlQueryParam.SortBy)! as string &
+      keyof GameDetailsModel;
   }
 
   if (urlQueryParams.has(UrlQueryParam.SortDirection)) {
@@ -265,10 +260,10 @@ function readParamsFromUrlQuery<TItem extends ItemBase>(
   return result;
 }
 
-function readFilterValuesFromUrlQuery<TItem extends ItemBase>(
+function readFilterValuesFromUrlQuery(
   urlQueryParams: ReadonlyURLSearchParams
-): QueryFilters<TItem> {
-  const result: QueryFilters<TItem> = {};
+): QueryFilters {
+  const result: QueryFilters = {};
   for (const [key, value] of urlQueryParams.entries()) {
     // currently assuming product fields are NOT kebab case...
     // filter field eg: f-price-min
@@ -276,16 +271,18 @@ function readFilterValuesFromUrlQuery<TItem extends ItemBase>(
     if (split.length !== 3 || split[0] !== "f") continue;
     const [_, field, operator] = split as [
       string,
-      Extract<keyof TItem, string>,
-      Extract<keyof FilterOperators<TItem[keyof TItem]>, string>
+      Extract<keyof GameDetailsModel, string>,
+      Extract<keyof FilterOperators<GameDetailsModel[keyof GameDetailsModel]>, string>
     ];
 
     try {
+      debugger;
       // todo better error handling
       const parsedValue = JSON.parse(value);
-      const fieldObj: FieldFilters<TItem[typeof field]> =
+      // todo `typeof field` is always string isn't it? doesn't matter, here, but pretty sure this is wrong
+      const fieldObj: FieldFilters<GameDetailsModel[typeof field]> =
         result[field] || (result[field] = {});
-      fieldObj[operator] = JSON.parse(parsedValue);
+      fieldObj[operator] = parsedValue;
     } catch {}
   }
 

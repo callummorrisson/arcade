@@ -11,17 +11,16 @@ import {
 } from "../search-store";
 import style from "./topbar.module.scss";
 import Dropdown from "@/components/dropdown";
-import { ItemBase } from "@/data/types/item-base.type";
 import { SearchSettings, useSearchSettings } from "../settings-store";
 
-export default function Topbar<TItem extends ItemBase>() {
+export default function Topbar() {
   const [sortOptions, labelMap] = useSearchSettings(
-    (x: SearchSettings<TItem>) => [x.sortOptions, x.labelMap]
+    (x: SearchSettings) => [x.sortOptions, x.labelMap]
   );
   const [display, sortBy, sortAscending] = useSearchParams(
-    (x: SearchParams<TItem>) => [x.display, x.sortBy, x.sortAscending]
+    (x: SearchParams) => [x.display, x.sortBy, x.sortAscending]
   );
-  const updateParams = useSearchParamsUpdater<TItem>();
+  const updateParams = useSearchParamsUpdater();
 
   const sortList = sortOptions.map((x) => ({ label: labelMap[x], value: x }));
 

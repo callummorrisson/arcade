@@ -1,32 +1,30 @@
 "use client";
 
 import style from "./sidebar.module.scss";
-import { unwrapFilterBuilder } from "../filterbuilder";
+import { FilterComponent, unwrapFilterBuilder } from "../filterbuilder";
 import { useRef } from "react";
-import { FieldFilters } from "@/data/types/paged-query.type";
+import { FieldFilters } from "@/data/models/search.model";
 import {
   SearchParams,
   useSearchParams,
   useSearchParamsUpdater,
 } from "../search-store";
 import { SearchSettings, useSearchSettings } from "../settings-store";
-import { ItemBase } from "@/data/types/item-base.type";
+import GameDetailsModel from "@/data/models/game-details.model";
 
-export default function Sidebar<TItem extends ItemBase>() {
-  const updateParams = useSearchParamsUpdater<TItem>();
-  const filterValues = useSearchParams(
-    (x: SearchParams<TItem>) => x.filters
-  );
-  const [filters, labelMap] = useSearchSettings(
-    (x: SearchSettings<TItem>) => [x.filters, x.labelMap]
-  );
+export default function Sidebar() {
+  const updateParams = useSearchParamsUpdater();
+  const filterValues = useSearchParams((x: SearchParams) => x.filters);
+  const [filters, labelMap] = useSearchSettings((x: SearchSettings) => [
+    x.filters,
+    x.labelMap,
+  ]);
 
-  const filterDefinitions = useRef(unwrapFilterBuilder<TItem>(filters));
+  const filterDefinitions = useRef(unwrapFilterBuilder(filters));
 
-  function handleFilterChange<TField extends Extract<keyof TItem, string>>(
-    field: TField,
-    newFilters: FieldFilters<TItem[TField]>
-  ) {
+  function handleFilterChange<
+    TField extends Extract<keyof GameDetailsModel, string>
+  >(field: TField, newFilters: FieldFilters<GameDetailsModel[TField]>) {
     const updated = { ...filterValues, [field]: newFilters };
 
     // changing filters should reset to first page
@@ -40,14 +38,18 @@ export default function Sidebar<TItem extends ItemBase>() {
       </h3>
       {filterDefinitions.current.map((x, i) => {
         const field = x.field;
+        const Filter = x.component as FilterComponent<
+          GameDetailsModel[typeof x.field]
+        >;
+
         return (
           <div key={i}>
             <h3>{labelMap[x.field]}</h3>
-            <x.component
+            <Filter
               onChange={(val) => handleFilterChange(field, val)}
               value={
                 filterValues[x.field] ??
-                ({} as FieldFilters<TItem[typeof x.field]>)
+                ({} as FieldFilters<GameDetailsModel[typeof x.field]>)
               }
             />
           </div>

@@ -1,20 +1,20 @@
 "use client";
 
+import GameDetailsModel from "@/data/models/game-details.model";
 import { useSearchParams, useSearchResults } from "../search-store";
 
 import style from "./results.module.scss";
-import { ItemBase } from "@/data/types/item-base.type";
 
 const DEFAULT_DISPLAYTEMPLATE = {
-  grid: (x: ItemBase) => <div>{x.name}</div>,
-  list: (x: ItemBase) => <div>{x.name}</div>,
+  grid: (x: GameDetailsModel) => <div>{x.name}</div>,
+  list: (x: GameDetailsModel) => <div>{x.name}</div>,
 }
 
 export default function Results() {
   const results = useSearchResults((x) => x.results);
-  const [display, displayTemplates ] = useSearchParams((x) => [x.display, x.displayTemplates]);
+  const [display ] = useSearchParams((x) => [x.display]);
 
-  const ResultComp: React.FC<ItemBase> = displayTemplates[display] ?? DEFAULT_DISPLAYTEMPLATE[display];
+  const ResultComp: React.FC<GameDetailsModel> =  DEFAULT_DISPLAYTEMPLATE[display];
   return (
     <div
       className={`${style["results-container"]} ${style["results-" + display]}`}

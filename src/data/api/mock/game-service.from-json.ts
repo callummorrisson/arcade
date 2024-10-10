@@ -3,56 +3,32 @@ import GameServiceContract from "../game-service.contract";
 import {
   FieldFilters,
   FilterOperators,
-  PagedQuery,
-} from "@/data/types/paged-query.type";
-import { PagedResult } from "@/data/types/paged-result.type";
-import { ItemBase } from "@/data/types/item-base.type";
+  SearchModel,
+} from "@/data/models/search.model";
+import { SearchResultsModel } from "@/data/models/search-results.model";
 
 export class GameServiceFromJson implements GameServiceContract {
-  #baseUrl: string;
+  baseUrl: string;
 
   constructor(baseUrl: string) {
-    this.#baseUrl = baseUrl;
+    this.baseUrl = baseUrl;
   }
 
   getAll(): Promise<GameDetailsModel[]> {
-    return this.#getFromJson();
+    return this.getFromJson();
   }
 
   async search(
-    query: PagedQuery<GameDetailsModel>
-  ): Promise<PagedResult<GameDetailsModel>> {
-    const data = await this.#getFromJson();
-    const results = await this.#performPagedQuery(data, query);
-    return results;
-  }
-
-  async getGameDetails(gameId: string): Promise<GameDetailsModel | undefined> {
-    const all = await this.#getFromJson();
-    return all.find((x) => x.id === gameId);
-  }
-
-  async #getFromJson(): Promise<GameDetailsModel[]> {
-    const json = await fetch(`${this.#baseUrl}/games.db.json`);
-    const data: GameDetailsModel[] = await json.json();
-    return data;
-  }
-
-  async #performPagedQuery<TItem extends ItemBase>(
-    data: TItem[],
-    query: PagedQuery<TItem>
-  ): Promise<PagedResult<TItem>> {
+    query: SearchModel
+  ): Promise<SearchResultsModel> {
+    const data = await this.getFromJson();
     type QFEntries = {
-      [K in keyof TItem]: [K, FieldFilters<TItem[K]>];
-    }[keyof TItem][];
-
-    type FFEntries<T> = {
-      [K in keyof FilterOperators<T>]: [K, FilterOperators<T>[K]];
-    }[keyof FilterOperators<T>][];
+      [K in keyof GameDetailsModel]: [K, FieldFilters<GameDetailsModel[K]>];
+    }[keyof GameDetailsModel][];
 
     const filtered = data.filter((x) =>
       (Object.entries(query.filters) as QFEntries).every(([field, filters]) =>
-        (Object.entries(filters) as FFEntries<TItem[typeof field]>).every(
+        (Object.entries(filters)).every(
           ([operator, filterValue]) => {
             const val = x[field];
 
@@ -86,16 +62,16 @@ export class GameServiceFromJson implements GameServiceContract {
                 return (val as string).includes(filterValue as string);
               // number
               case "min":
-                return (filterValue as number) <= (val as number);
+                return (filterValue as Date) <= (val as Date);
               case "max":
-                return (filterValue as number) >= (val as number);
+                return (filterValue as Date) >= (val as Date);
               default:
                 throw `No mock handler for ${operator as string}`;
             }
           }
         )
       )
-    ) as TItem[];
+    ) as GameDetailsModel[];
     const results = filtered.toSorted(
       (a, b, sortBy = query.sortBy, sortDir = query.sortAscending ? 1 : -1) =>
         a[sortBy] > b[sortBy] ? sortDir : a[sortBy] < b[sortBy] ? -sortDir : 0
@@ -105,12 +81,23 @@ export class GameServiceFromJson implements GameServiceContract {
     const startIndex = query.pageSize * (query.pageNumber - 1);
     const endIndex = startIndex + query.pageSize;
     const pagedResults = results.slice(startIndex, endIndex);
-    const model: PagedResult<TItem> = {
+    const model: SearchResultsModel = {
       pageNumber: query.pageNumber,
       results: pagedResults,
       totalResults: total,
     };
 
     return model;
+  }
+
+  async getGameDetails(gameId: string): Promise<GameDetailsModel | undefined> {
+    const all = await this.getFromJson();
+    return all.find((x) => x.id === gameId);
+  }
+
+  async getFromJson(): Promise<GameDetailsModel[]> {
+    const json = await fetch(`${this.baseUrl}/games.db.json`);
+    const data: GameDetailsModel[] = await json.json();
+    return data;
   }
 }

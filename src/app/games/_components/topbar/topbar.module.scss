@@ -1,5 +1,4 @@
-$color-background-highlight: red;
-$color-secondary: blue;
+@import "@/styles/variables";
 
 .topbar {
   display: flex;
@@ -20,16 +19,32 @@ $color-secondary: blue;
   }
 
   label {
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3rem;
-    height: 3rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
 
+    cursor: pointer;
+
+    background: $bg-input;
+    color: $fg-input;
+
+    & ~ label {
+      margin-left: 0.25rem;
+    }
+
+    &:hover {
+      background: $bg-input-hover;
+      color: $fg-input-hover;
+    }
+
     &:has(input:checked) {
-      background: $color-background-highlight;
+      cursor: default;
+
+      background: $bg-input-selected;
+      color: $fg-input-selected;
     }
   }
 }

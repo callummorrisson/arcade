@@ -1,7 +1,9 @@
-import { ItemBase } from "@/data/types/item-base.type";
-
-export default interface GameDetailsModel extends ItemBase {
+export default interface GameDetailsModel {
   id: string;
+  name: string;
   description: string;
+
+  createdDate: Date;
+
   gamePath: string;
 }

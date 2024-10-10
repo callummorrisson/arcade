@@ -1,5 +1,4 @@
-$color-background-highlight: red;
-$color-secondary: blue;
+@import "@/styles/variables";
 
 .pagination {
   display: grid;
@@ -27,13 +26,21 @@ $color-secondary: blue;
       margin: 0 0.1rem;
       aspect-ratio: 1/1;
 
-      background: $color-background-highlight;
+      background: $bg-input;
+      color: $fg-input;
+
       border-radius: 0.25rem;
       cursor: pointer;
 
+      &:hover {
+        background: $bg-input-hover;
+        color: $fg-input-hover;
+      }
+
       &.current-page {
         cursor: default;
-        background: $color-secondary;
+        background: $bg-input-selected;
+        color: $fg-input-selected;
       }
 
       &.page-gap {
@@ -41,8 +48,8 @@ $color-secondary: blue;
       }
 
       &:disabled {
-        background: #555;
-        color: #BBB;
+        background: $bg-input-disabled;
+        color: $fg-input-disabled;
         cursor: default;
       }
     }
