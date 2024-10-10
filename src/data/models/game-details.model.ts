@@ -2,8 +2,8 @@ export default interface GameDetailsModel {
   id: string;
   name: string;
   description: string;
-
   createdDate: Date;
 
-  gamePath: string;
+  gameFolder: string;
+  coverExtension?: string;
 }

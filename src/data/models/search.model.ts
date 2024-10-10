@@ -12,7 +12,7 @@ export interface SearchModel {
 
 export type QueryFilters = {
   [field in Extract<keyof GameDetailsModel, string>]?: FieldFilters<
-    GameDetailsModel[field]
+    NonNullable<GameDetailsModel[field]>
   >;
 };
 

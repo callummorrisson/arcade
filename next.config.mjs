@@ -1,4 +1,4 @@
-import GameDbGeneratorPlugin from './game-db-generator.plugin.mjs';
+import GameDbGeneratorPlugin from './.build/game-db-generator.plugin.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -9,7 +9,8 @@ const nextConfig = {
     config,
     { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
   ) => {
-    if (!isServer || !dev) config.plugins.push(new GameDbGeneratorPlugin());
+    // nextjs has 3 compilers, we only want to attach to the first one
+    if (nextRuntime === 'nodejs') config.plugins.push(new GameDbGeneratorPlugin());
     // Important: return the modified config
     return config
   }

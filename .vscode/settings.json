@@ -4,7 +4,7 @@
             "fileMatch": [
                 "/src/games/*/game.manifest.json"
             ],
-            "url": "/game.manifest.schema.json"
+            "url": "/.build/game.manifest.schema.json"
         }
     ]
 }
