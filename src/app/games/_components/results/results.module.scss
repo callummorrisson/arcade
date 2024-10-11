@@ -13,6 +13,7 @@ $pad: .25rem;
       grid-area: thumb;
       aspect-ratio: 1/1;
       border-radius: 0.25rem;
+      object-fit:cover;
     }
 
     .item-name {
@@ -49,6 +50,7 @@ $pad: .25rem;
 
         .item-thumbnail {
           max-height: 4rem;
+          max-width: 4rem;
         }
     }
   }
