@@ -2,8 +2,6 @@
 
 import { SearchResultsModel } from "@/data/models/search-results.model";
 import {
-  FieldFilters,
-  FilterOperators,
   SearchModel,
   QueryFilters,
 } from "@/data/models/search.model";
@@ -135,7 +133,7 @@ function StateManager({
     for (field in searchParams.filters) {
       const fieldFilters = searchParams.filters[field]!;
 
-      let operator: Extract<keyof typeof fieldFilters, string>;
+      let operator: keyof typeof fieldFilters;
       for (operator in fieldFilters) {
         const key = `f-${field}-${operator}`;
         const value = searchParams.filters[field]![operator];
@@ -269,21 +267,18 @@ function readFilterValuesFromUrlQuery(
     // filter field eg: f-price-min
     const split = key.split("-");
     if (split.length !== 3 || split[0] !== "f") continue;
-    const [_, field, operator] = split as [
-      string,
-      Extract<keyof GameDetailsModel, string>,
-      Extract<keyof FilterOperators<GameDetailsModel[keyof GameDetailsModel]>, string>
-    ];
 
     try {
-      debugger;
-      // todo better error handling
       const parsedValue = JSON.parse(value);
-      // todo `typeof field` is always string isn't it? doesn't matter, here, but pretty sure this is wrong
-      const fieldObj: FieldFilters<GameDetailsModel[typeof field]> =
-        result[field] || (result[field] = {});
+
+      const field = split[1] as keyof typeof result;
+      const fieldObj = result[field] || (result[field] = {});
+      const operator = split[2] as keyof typeof fieldObj;
+
       fieldObj[operator] = parsedValue;
-    } catch {}
+    } catch {
+      // todo consider better error handling
+    }
   }
 
   return result;

@@ -4,13 +4,12 @@ import style from "./filters.module.scss";
 export default class Filters {
   static MinMax(props: React.ComponentProps<FilterComponent<number>>) {
     function handleChange(op: "min" | "max", value: number) {
-      const result = {...props.value };
-        if (value > 0) {
-          result[op] = value;
-        } else {
-          delete result[op];
-        }
-    
+      const result = { ...props.value };
+      if (value > 0) {
+        result[op] = value;
+      } else {
+        delete result[op];
+      }
 
       props.onChange(result);
     }

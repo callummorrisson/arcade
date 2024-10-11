@@ -3,7 +3,7 @@ import FilterBuilder from "./filterbuilder";
 import createStore, { Store } from "@/utils/create-store";
 
 export type LabelMap = {
-  [field in keyof GameDetailsModel]: string;
+  [field in Extract<keyof GameDetailsModel, string>]: string;
 };
 
 export type SortOptions = (string & keyof GameDetailsModel)[];
@@ -45,16 +45,14 @@ export function SearchSettingsProvider({
   children: React.ReactNode;
   settings: Partial<SearchSettings>;
 }) {
-  const actualSettings: SearchSettings = {
+  const initialSettings: SearchSettings = {
     filters: settings.filters,
     labelMap: settings.labelMap ?? DEFAULT_LABELMAP,
     sortOptions: settings.sortOptions ?? DEFAULT_SORTOPTIONS,
   };
 
   return (
-    <SettingsStore.Provider
-      initialValue={actualSettings as SearchSettings}
-    >
+    <SettingsStore.Provider initialValue={initialSettings}>
       {children}
     </SettingsStore.Provider>
   );

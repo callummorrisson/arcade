@@ -11,12 +11,13 @@ import {
   SearchSettings,
   SearchSettingsProvider,
 } from "./_components/settings-store";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { SearchModel } from "@/data/models/search.model";
 
 export default function SearchGames() {
-  const [initialParams, setInitialParams] = useState<Partial<SearchParams>>();
-  const [settings, setSettings] = useState<Partial<SearchSettings>>({});
+  // todo params and settings
+  const [initialParams, _setInitialParams] = useState<Partial<SearchParams>>();
+  const [settings, _setSettings] = useState<Partial<SearchSettings>>({});
 
   const gameService = useDataService((x) => x.games);
   const resultsFunc = useCallback(
@@ -25,23 +26,27 @@ export default function SearchGames() {
   );
 
   return (
-    <SearchProvider resultsFunc={resultsFunc} initialParams={initialParams}>
-      <SearchSettingsProvider settings={settings}>
-        <div className={style.search}>
-          <div className={style.sidebar}>
-            <Sidebar />
+    // todo figure out what this <Suspense> is actually doing. 
+    //      default eslint rule is forcing us to use it, but it should work without.
+    <Suspense>
+      <SearchProvider resultsFunc={resultsFunc} initialParams={initialParams}>
+        <SearchSettingsProvider settings={settings}>
+          <div className={style.search}>
+            <div className={style.sidebar}>
+              <Sidebar />
+            </div>
+            <div className={style.topbar}>
+              <Topbar />
+            </div>
+            <div className={style.results}>
+              <Results />
+            </div>
+            <div className={style.pagination}>
+              <Pagination />
+            </div>
           </div>
-          <div className={style.topbar}>
-            <Topbar />
-          </div>
-          <div className={style.results}>
-            <Results />
-          </div>
-          <div className={style.pagination}>
-            <Pagination />
-          </div>
-        </div>
-      </SearchSettingsProvider>
-    </SearchProvider>
+        </SearchSettingsProvider>
+      </SearchProvider>
+    </Suspense>
   );
 }

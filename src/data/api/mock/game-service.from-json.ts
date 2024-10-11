@@ -1,10 +1,6 @@
 import GameDetailsModel from "@/data/models/game-details.model";
 import GameServiceContract from "../game-service.contract";
-import {
-  FieldFilters,
-  FilterOperators,
-  SearchModel,
-} from "@/data/models/search.model";
+import { SearchModel } from "@/data/models/search.model";
 import { SearchResultsModel } from "@/data/models/search-results.model";
 
 export class GameServiceFromJson implements GameServiceContract {
@@ -18,63 +14,59 @@ export class GameServiceFromJson implements GameServiceContract {
     return this.getFromJson();
   }
 
-  async search(
-    query: SearchModel
-  ): Promise<SearchResultsModel> {
+  async search(query: SearchModel): Promise<SearchResultsModel> {
     const data = await this.getFromJson();
-    type QFEntries = {
-      [K in keyof GameDetailsModel]: [K, FieldFilters<GameDetailsModel[K]>];
-    }[keyof GameDetailsModel][];
-
     const filtered = data.filter((x) =>
-      (Object.entries(query.filters) as QFEntries).every(([field, filters]) =>
-        (Object.entries(filters)).every(
-          ([operator, filterValue]) => {
-            const val = x[field];
+      Object.entries(query.filters).every(([field, filters]) =>
+        Object.entries(filters).every(([operator, filterValue]) => {
+          const val = x[field as keyof GameDetailsModel];
 
-            // exclude null/empty when a filter is applied
-            if (val === null || val === undefined) return false;
+          // exclude null/empty when a filter is applied
+          if (val === null || val === undefined) return false;
 
-            // array filters
-            if (val instanceof Array) {
-              switch (operator) {
-                case "contains":
-                  return val.includes(filterValue);
-                case "containsAll":
-                  return (filterValue as typeof val).every(val.includes);
-                case "doesNotContainAny":
-                  return !(filterValue as typeof val).every(val.includes);
-                default:
-                  throw `No mock handler for ${operator as string}`;
-              }
-            }
-
-            // value filters
+          // array filters
+          if (val instanceof Array) {
             switch (operator) {
-              case "isOneOf":
-                return (filterValue! as (typeof val)[]).includes(val);
-              case "isNotOneOf":
-                return !(filterValue! as (typeof val)[]).includes(val);
-              case "equals":
-                return filterValue === val;
-              // string
               case "contains":
-                return (val as string).includes(filterValue as string);
-              // number
-              case "min":
-                return (filterValue as Date) <= (val as Date);
-              case "max":
-                return (filterValue as Date) >= (val as Date);
+                return val.includes(filterValue);
+              case "containsAll":
+                return (filterValue as typeof val).every(val.includes);
+              case "doesNotContainAny":
+                return !(filterValue as typeof val).every(val.includes);
               default:
                 throw `No mock handler for ${operator as string}`;
             }
           }
-        )
+
+          // value filters
+          switch (operator) {
+            case "isOneOf":
+              return (filterValue! as (typeof val)[]).includes(val);
+            case "isNotOneOf":
+              return !(filterValue! as (typeof val)[]).includes(val);
+            case "equals":
+              return filterValue === val;
+            // string
+            case "contains":
+              return (val as string).includes(filterValue as string);
+            // number | Date
+            case "min":
+              return (filterValue as Date | number) <= (val as Date | number);
+            case "max":
+              return (filterValue as Date | number) >= (val as Date | number);
+            default:
+              throw `No mock handler for ${operator as string}`;
+          }
+        })
       )
     ) as GameDetailsModel[];
     const results = filtered.toSorted(
       (a, b, sortBy = query.sortBy, sortDir = query.sortAscending ? 1 : -1) =>
-        a[sortBy] > b[sortBy] ? sortDir : a[sortBy] < b[sortBy] ? -sortDir : 0
+        a[sortBy]! > b[sortBy]!
+          ? sortDir
+          : a[sortBy]! < b[sortBy]!
+          ? -sortDir
+          : 0
     );
 
     const total = results.length;

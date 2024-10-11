@@ -24,6 +24,7 @@ export type FilterOperators<T> = UnionToIntersection<
   | ValueFilterOperators<T>
   | StringFilterOperators<T>
   | DateFilterOperators<T>
+  | NumberFilterOperators<T>
   | ArrayFilterOperators<T>
 >;
 
@@ -41,7 +42,14 @@ type StringFilterOperators<T> = T extends string
     }
   : never;
 
-type DateFilterOperators<T> = T extends number
+type DateFilterOperators<T> = T extends Date
+  ? {
+      min: T;
+      max: T;
+    }
+  : never;
+
+type NumberFilterOperators<T> = T extends number
   ? {
       min: T;
       max: T;
