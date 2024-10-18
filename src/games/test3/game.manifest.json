@@ -1,5 +1,6 @@
 {
-    "id": "test3",
-    "name": "Test Three",
-    "description": "Testing that this does stuff"
+  "id": "test3",
+  "name": "Test Three",
+  "description": "Testing that this does stuff",
+  "createdDate": "2024-10-17"
 }

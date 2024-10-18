@@ -90,6 +90,11 @@ export class GameServiceFromJson implements GameServiceContract {
   async getFromJson(): Promise<GameDetailsModel[]> {
     const json = await fetch(`${this.baseUrl}/games.db.json`);
     const data: GameDetailsModel[] = await json.json();
+
+    // dodgy replacement of createdDate stirng with Date
+    data.forEach(x => {
+      x.createdDate = new Date(x.createdDate)
+    })
     return data;
   }
 }

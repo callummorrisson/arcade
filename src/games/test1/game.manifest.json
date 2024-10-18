@@ -1,5 +1,6 @@
 {
     "id": "test1",
     "name": "Test One",
-    "description": "Testing that this does stuff"
+    "description": "Testing that this does stuff",
+    "createdDate": "2024-10-01"
 }

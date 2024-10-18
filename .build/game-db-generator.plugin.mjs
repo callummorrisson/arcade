@@ -101,7 +101,7 @@ export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
     if (!valid) {
       console.error(
         `INVALID GAME MANIFEST: ${filePath}`,
-        schemaValidator.errors.map((e) => e.message)
+        validator.errors.map((e) => e.message)
       );
     }
 

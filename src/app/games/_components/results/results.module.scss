@@ -1,4 +1,6 @@
-$pad: .25rem;
+@import "@/styles/_variables.scss";
+
+$pad: 0.25rem;
 
 .results-container {
   width: 100%;
@@ -13,27 +15,84 @@ $pad: .25rem;
       grid-area: thumb;
       aspect-ratio: 1/1;
       border-radius: 0.25rem;
-      object-fit:cover;
+      object-fit: cover;
     }
 
     .item-name {
       grid-area: name;
       font-weight: bold;
     }
+
+    .item-summary-name {
+      grid-area: summary-name;
+      font-weight: bold;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+      padding: 0.5em;
+    }
+
+    .item-description {
+      grid-area: description;
+      text-overflow: ellipsis;
+    }
+
+    .item-created-date {
+      grid-area: created-date;
+      text-overflow: ellipsis;
+    }
   }
 
   &.results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40ch, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(30ch, 1fr));
 
     > .item {
       grid-template-areas:
-        "thumb thumb"
-        "name price"
-        "button button";
+        "thumb"
+        "summary-name";
+
+      grid-template-rows: auto 1fr;
+
+      position: relative;
+
+      .item-summary {
+        display: contents;
+      }
 
       .item-thumbnail {
         width: 100%;
+      }
+
+      .item-details {
+        z-index: 1000;
+        display: grid;
+        position: absolute;
+        top: 10%;
+        left: 50%;
+
+        padding: 0.5em;
+        border-radius: 0.5em;
+
+        text-wrap: nowrap;
+
+        grid-template-areas:
+          "name "
+          "created-date"
+          "description ";
+
+        background: $bg-popover;
+        color: $fg-popover;
+        backdrop-filter: blur(10px);
+      }
+
+      &:not(:hover) {
+        .item-details {
+          display: none;
+        }
       }
     }
   }
@@ -44,14 +103,26 @@ $pad: .25rem;
 
     > .item {
       grid-template-areas:
-        "thumb name price x "
-        "thumb rating price button";
-        grid-template-columns: auto auto auto 40ch;
+        "thumb name created-date"
+        "thumb description description";
+      grid-template-columns: auto 1fr 1fr;
 
-        .item-thumbnail {
-          max-height: 4rem;
-          max-width: 4rem;
-        }
+      .item-summary-name {
+        display: none;
+      }
+
+      .item-summary {
+        display: contents;
+      }
+
+      .item-details {
+        display: contents;
+      }
+
+      .item-thumbnail {
+        max-height: 4rem;
+        max-width: 4rem;
+      }
     }
   }
 }
