@@ -31,7 +31,7 @@ export default function AutoScaleText({
   // not sure font size matters, I just picked a nice number
   const fontSize = 11;
   // general guestimation based on average aspect ratio of fonts, should be tuned
-  const averageLetterAspectRatio = 0.6;
+  const averageLetterAspectRatio = 0.55;
   // 10000 here just makes it so if the text is empty we don't take up crazy height
   const viewBowWidth =
     (text.length || 10000) * fontSize * averageLetterAspectRatio;

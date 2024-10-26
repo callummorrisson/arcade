@@ -17,11 +17,13 @@ export default function Results() {
       {results.map((x, i) => (
         <div className={style.item} key={i}>
           <div className={style["item-summary"]}>
-            <GameCoverImage
-              gameFolder={x.gameFolder}
-              coverExtension={x.coverExtension}
-              className={style["item-thumbnail"]}
-            />
+            <div className={style["item-thumbnail"]}>
+              <GameCoverImage
+                gameFolder={x.gameFolder}
+                coverExtension={x.coverExtension}
+                className={style["item-thumbnail"]}
+              />
+            </div>
             <div className={style["item-summary-name"]}>
               <AutoScaleText text={x.name} />
             </div>
@@ -30,7 +32,9 @@ export default function Results() {
           <div className={style["item-details"]}>
             <span className={style["item-name"]}>{x.name}</span>
             <span className={style["item-description"]}>{x.description}</span>
-            <span className={style["item-created-date"]}>{x.createdDate.toLocaleDateString()}</span>
+            <span className={style["item-created-date"]}>
+              {x.createdDate.toLocaleDateString()}
+            </span>
           </div>
         </div>
       ))}
