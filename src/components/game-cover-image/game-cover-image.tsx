@@ -24,6 +24,8 @@ export function GameCoverImage({
 
     if (coverExtension) {
       getCover();
+    } else {
+      setCover(undefined);
     }
   }, [gameFolder, coverExtension]);
 
