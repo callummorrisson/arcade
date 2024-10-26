@@ -1,10 +1,7 @@
 "use client";
 
 import { SearchResultsModel } from "@/data/models/search-results.model";
-import {
-  SearchModel,
-  QueryFilters,
-} from "@/data/models/search.model";
+import { SearchModel, QueryFilters } from "@/data/models/search.model";
 import {
   ReadonlyURLSearchParams,
   usePathname,
@@ -92,17 +89,25 @@ function StateManager({
 }: Readonly<{
   resultsFunc: (query: SearchModel) => Promise<SearchResultsModel>;
 }>) {
-  const searchParams = useSearchParams((x: SearchParams) => x);
+  const { display, sortBy, sortAscending, pageSize, pageNumber, filters } =
+    useSearchParams((x: SearchParams) => x);
   const resultsUpdater = useProductResultsUpdater();
   const pathname = usePathname();
 
+  // retrieve and update search results on SearchModel change
   useEffect(() => {
     let isStale = false;
 
     // debounced call to resultsFunc
     const timeoutId = setTimeout(() => {
       resultsUpdater({ isLoading: true });
-      resultsFunc(searchParams).then((val) => {
+      resultsFunc({
+        sortBy,
+        sortAscending,
+        pageSize,
+        pageNumber,
+        filters,
+      }).then((val) => {
         if (isStale) return;
         resultsUpdater({
           isLoading: false,
@@ -117,7 +122,17 @@ function StateManager({
       isStale = true;
       clearTimeout(timeoutId);
     };
-  }, [resultsFunc, resultsUpdater, searchParams]);
+  }, [
+    resultsFunc,
+    resultsUpdater,
+
+    // note: specifically excluding 'display'
+    sortBy,
+    sortAscending,
+    pageSize,
+    pageNumber,
+    filters,
+  ]);
 
   // update url query string on filters change
   useEffect(() => {
@@ -129,28 +144,25 @@ function StateManager({
       )
     );
 
-    let field: keyof typeof searchParams.filters;
-    for (field in searchParams.filters) {
-      const fieldFilters = searchParams.filters[field]!;
+    let field: keyof typeof filters;
+    for (field in filters) {
+      const fieldFilters = filters[field]!;
 
       let operator: keyof typeof fieldFilters;
       for (operator in fieldFilters) {
         const key = `f-${field}-${operator}`;
-        const value = searchParams.filters[field]![operator];
+        const value = filters[field]![operator];
         current.set(key, JSON.stringify(value));
       }
     }
 
     updateUrlQueryString(pathname, current);
-  }, [searchParams.filters]);
+  }, [filters]);
 
   // update url query string and localStorage when display, sorting, or paging options change
   useEffect(() => {
     const urlSearchParams = new URL(window.location.toString()).searchParams;
     const current = new URLSearchParams(Array.from(urlSearchParams.entries()));
-
-    const { display, sortBy, sortAscending, pageSize, pageNumber } =
-      searchParams;
 
     current.set(UrlQueryParam.Display, display);
     current.set(UrlQueryParam.SortBy, sortBy);
@@ -165,13 +177,7 @@ function StateManager({
       STORAGE_KEY,
       JSON.stringify({ display, sortBy, sortAscending, pageSize })
     );
-  }, [
-    searchParams.display,
-    searchParams.sortBy,
-    searchParams.sortAscending,
-    searchParams.pageSize,
-    searchParams.pageNumber,
-  ]);
+  }, [display, sortBy, sortAscending, pageSize, pageNumber]);
 
   return <></>;
 }
