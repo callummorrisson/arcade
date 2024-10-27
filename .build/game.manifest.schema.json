@@ -10,5 +10,6 @@
     "description": { "type": "string" },
     "createdDate": { "type": "string", "format": "date" }
   },
+  "additionalProperties": false,
   "required": ["id", "name", "description", "createdDate"]
 }

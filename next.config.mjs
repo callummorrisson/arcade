@@ -1,4 +1,5 @@
 import GameDbGeneratorPlugin from "./.build/game-db-generator.plugin.mjs";
+import GameManifestTypescriptGeneratorPlugin from "./.build/game-manifest-typescript-generator.plugin.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,8 +30,11 @@ const nextConfig = {
     { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
   ) => {
     // nextjs has 3 compilers, we only want to attach to the first one
-    if (nextRuntime === "nodejs")
+    if (nextRuntime === "nodejs") {
       config.plugins.push(new GameDbGeneratorPlugin());
+      config.plugins.push(new GameManifestTypescriptGeneratorPlugin());
+    }
+
     // Important: return the modified config
     return config;
   },

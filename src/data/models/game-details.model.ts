@@ -1,9 +1,7 @@
-export default interface GameDetailsModel {
-  id: string;
-  name: string;
-  description: string;
-  createdDate: Date;
+import GameDatabaseModel from "./game-database.model";
 
-  gameFolder: string;
-  coverExtension?: string;
+type withoutDateString = Omit<GameDatabaseModel, "createdDate">;
+
+export default interface GameDetailsModel extends withoutDateString {
+  createdDate: Date;
 }

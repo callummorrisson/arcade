@@ -2,6 +2,7 @@ import GameDetailsModel from "@/data/models/game-details.model";
 import GameServiceContract from "../game-service.contract";
 import { SearchModel } from "@/data/models/search.model";
 import { SearchResultsModel } from "@/data/models/search-results.model";
+import GameDatabaseModel from "@/data/models/game-database.model";
 
 export class GameServiceFromJson implements GameServiceContract {
   baseUrl: string;
@@ -65,8 +66,8 @@ export class GameServiceFromJson implements GameServiceContract {
         a[sortBy]! > b[sortBy]!
           ? sortDir
           : a[sortBy]! < b[sortBy]!
-          ? -sortDir
-          : 0
+            ? -sortDir
+            : 0
     );
 
     const total = results.length;
@@ -89,12 +90,12 @@ export class GameServiceFromJson implements GameServiceContract {
 
   async getFromJson(): Promise<GameDetailsModel[]> {
     const json = await fetch(`${this.baseUrl}/games.db.json`);
-    const data: GameDetailsModel[] = await json.json();
+    const data: GameDatabaseModel[] = await json.json();
 
-    // dodgy replacement of createdDate stirng with Date
-    data.forEach(x => {
-      x.createdDate = new Date(x.createdDate)
-    })
-    return data;
+    // replacement of createdDate stirng with Date
+    return data.map<GameDetailsModel>((x) => ({
+      ...x,
+      createdDate: new Date(x.createdDate),
+    }));
   }
 }
