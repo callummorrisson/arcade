@@ -16,7 +16,7 @@ const typeName = "GameManifestModel";
 
 export default class GameManifestTypescriptGeneratorPlugin extends WatchExecutePlugin {
   constructor() {
-    super([schemaFileName], () => this.#generate());
+    super(schemaFileName, () => this.#generate());
     this.isInProgress = false;
 
     // hack: call once on first compile - means build server will always execute
@@ -25,14 +25,16 @@ export default class GameManifestTypescriptGeneratorPlugin extends WatchExecuteP
 
   #generate() {
     if (this.isInProgress) return;
+
     try {
       this.isInProgress = true;
       const manifestSchema = getManifestSchema(schemaFileName);
-      
+
       // note: there's no synchronous overload for compile
       // if this causes issues then should wrap with something like (https://www.npmjs.com/package/synchronized-promise)
       compile(manifestSchema, typeName, {
         bannerComment: bannerComment,
+        ignoreMinAndMaxItems: true
       }).then((ts) => {
         fs.writeFileSync(typeDefinitionFileName, ts);
         this.isInProgress = false;

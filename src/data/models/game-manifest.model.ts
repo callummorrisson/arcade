@@ -11,4 +11,8 @@ export interface GameManifestModel {
   name: string;
   description: string;
   createdDate: string;
+  /**
+   * @minItems 1
+   */
+  controlOptions: ("mouse" | "keyboard" | "mouse-and-keyboard" | "midi" | "gamepad")[];
 }

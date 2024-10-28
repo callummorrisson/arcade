@@ -8,8 +8,17 @@
     },
     "name": { "type": "string" },
     "description": { "type": "string" },
-    "createdDate": { "type": "string", "format": "date" }
+    "createdDate": { "type": "string", "format": "date" },
+    "controlOptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["mouse", "keyboard", "mouse-and-keyboard", "midi", "gamepad"],
+        "uniqueItems": true
+      },
+      "minItems": 1
+    }
   },
   "additionalProperties": false,
-  "required": ["id", "name", "description", "createdDate"]
+  "required": ["id", "name", "description", "createdDate", "controlOptions"]
 }
