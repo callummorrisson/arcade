@@ -1,5 +1,6 @@
 "use client";
 
+import RadioButtons from "../radio-buttons";
 import style from "./dropdown.module.scss";
 import { FaChevronDown } from "react-icons/fa";
 
@@ -17,35 +18,25 @@ export default function Dropdown<T extends string | number>({
       </div>
       <div className={style["options-container"]}>
         <div className={style.options}>
-          {items.map((x) => {
-            const v = x.value;
-            return (
-              <label key={x.value} className={style.option}>
-                <input
-                  type="radio"
-                  value={x.value}
-                  onChange={() => {
-                    onChange(v);
-                  }}
-                  checked={x.value === selected}
-                />
-                {x.label}
-              </label>
-            );
-          })}
+          <RadioButtons
+            options={items}
+            showRadio={false}
+            onChange={onChange}
+            selected={selected}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-interface DropDownOption<T> {
-  label: string | number;
-  value: T;
-}
-
 interface DropdownProps<T extends string | number> {
   selected: T;
   items: DropDownOption<T>[];
   onChange: (value: T) => void;
+}
+
+interface DropDownOption<T> {
+  label: string | number;
+  value: T;
 }

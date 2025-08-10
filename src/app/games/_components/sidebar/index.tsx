@@ -23,7 +23,7 @@ export default function Sidebar() {
   const filterDefinitions = useRef(unwrapFilterBuilder(filters));
 
   function handleFilterChange<
-    TField extends Extract<keyof GameDetailsModel, string>
+    TField extends Extract<keyof GameDetailsModel, string>,
   >(field: TField, newFilters: FieldFilters<GameDetailsModel[TField]>) {
     const updated = { ...filterValues, [field]: newFilters };
 
@@ -31,10 +31,14 @@ export default function Sidebar() {
     updateParams({ filters: updated, pageNumber: 1 });
   }
 
+  function clearFilters() {
+    updateParams({ filters: {} });
+  }
+
   return (
     <div className={style.sidebar}>
       <h3>
-        Filters <button>Clear</button>
+        Filters <button onClick={clearFilters}>Clear</button>
       </h3>
       {filterDefinitions.current.map((x, i) => {
         const field = x.field;

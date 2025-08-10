@@ -4,7 +4,7 @@ import useDataService from "@/data/api/use-data-service";
 import GameDetails from "@/data/models/game-details.model";
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { GameCoverImage } from "@/components/game-cover-image/game-cover-image";
+import { GameCoverImage } from "@/components/game-cover-image";
 
 type GamePageParams = { gameId: string };
 

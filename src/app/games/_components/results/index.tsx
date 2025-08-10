@@ -4,7 +4,7 @@ import AutoScaleText from "@/components/auto-scale-text";
 import { useSearchParams, useSearchResults } from "../search-store";
 
 import style from "./results.module.scss";
-import { GameCoverImage } from "@/components/game-cover-image/game-cover-image";
+import { GameCoverImage } from "@/components/game-cover-image";
 
 export default function Results() {
   const results = useSearchResults((x) => x.results);
