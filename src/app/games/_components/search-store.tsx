@@ -235,6 +235,9 @@ function getInitialParams(
 }
 
 function readParamsFromLocalStorageOrDefault(): Partial<SearchParams> {
+  // guard against intrusive nextjs SSR. apparently it's impossible to turn that shit off.
+  if (typeof window === "undefined" || !window.localStorage) return {};
+
   const paramsJson = localStorage.getItem(STORAGE_KEY);
   let params: Partial<SearchParams> = {};
   try {
