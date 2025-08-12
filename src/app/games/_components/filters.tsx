@@ -1,5 +1,5 @@
 import { FilterComponent } from "./filterbuilder";
-import style from "./filters.module.scss";
+import styles from "./filters.module.scss";
 
 export default class Filters {
   static MinMaxNumber(props: React.ComponentProps<FilterComponent<number>>) {
@@ -15,7 +15,7 @@ export default class Filters {
     }
 
     return (
-      <div className={style.minmax}>
+      <div className={styles.minmax}>
         <label>
           <span>Min</span>
           <input
@@ -53,7 +53,7 @@ export default class Filters {
     }
 
     return (
-      <div className={style.minmax}>
+      <div className={styles.minmax}>
         <label>
           <span>Min</span>
           <input

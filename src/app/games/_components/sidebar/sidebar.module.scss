@@ -4,4 +4,46 @@
   border-radius: .25rem;
   padding: .25rem;
   border: 1px solid;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .clear-button {
+      background-color: $bg-input;
+      padding: .25rem;
+      cursor: pointer;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: $bg-input-hover;
+      }
+    }
+  }
+
+  .keywords-filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    height: 2rem;
+    background-color: $bg-input;
+    border: 1px solid;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: $bg-input-hover;
+    }
+
+    &:focus-within {
+      background-color: $bg-input-selected;
+    }
+
+    input {
+      width: 100%;
+      padding: .5rem;
+    }
+  }
 }

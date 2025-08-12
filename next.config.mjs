@@ -1,5 +1,6 @@
 import GameDbGeneratorPlugin from "./.build/game-db-generator.plugin.mjs";
 import GameManifestTypescriptGeneratorPlugin from "./.build/game-manifest-typescript-generator.plugin.mjs";
+import * as path from 'path';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,6 +38,13 @@ const nextConfig = {
 
     // Important: return the modified config
     return config;
+  },
+
+sassOptions: {
+    includePaths: [path.join(process.cwd(), "src", "styles")],
+    additionalData: `
+      @use "variables.scss" as *;
+    `,
   },
 };
 

@@ -1,0 +1,35 @@
+.quick-search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    border-radius: 1rem;
+    padding: .5rem;
+    background-color: $bg-input;
+    color: $fg-input;
+
+    &:hover {
+        color: $fg-input-hover;
+        background-color: $bg-input-hover;
+    }
+
+    &:focus-within {
+        color: $fg-input-selected;
+        background-color: $bg-input-selected;
+    }
+
+    input {
+        margin-left: .5rem;
+        min-width: 50ch;
+    }
+
+    button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        cursor: pointer;
+
+        margin: .25rem;
+    }
+}

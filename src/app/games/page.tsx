@@ -4,13 +4,10 @@ import Pagination from "./_components/pagination";
 import Results from "./_components/results";
 import Sidebar from "./_components/sidebar";
 import Topbar from "./_components/topbar";
-import style from "./page.module.scss";
+import styles from "./page.module.scss";
 import useDataService from "@/data/api/use-data-service";
 import { SearchParams, SearchProvider } from "./_components/search-store";
-import {
-  SearchSettings,
-  SearchSettingsProvider,
-} from "./_components/settings-store";
+import { SearchSettings, SearchSettingsProvider } from "./_components/settings-store";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { SearchModel } from "@/data/models/search.model";
 import FilterBuilder from "./_components/filterbuilder";
@@ -20,7 +17,7 @@ import Filters from "./_components/filters";
 const filterbuilder = (builder: FilterBuilder) => {
   builder.clear();
   builder.add('createdDate', Filters.MinMaxDate);
-}  
+}
 
 export default function SearchGames() {
   // todo params and settings
@@ -39,17 +36,17 @@ export default function SearchGames() {
     <Suspense>
       <SearchProvider resultsFunc={resultsFunc} initialParams={initialParams}>
         <SearchSettingsProvider settings={settings}>
-          <div className={style.search}>
-            <div className={style.sidebar}>
+          <div className={styles.search}>
+            <div className={styles.sidebar}>
               <Sidebar />
             </div>
-            <div className={style.topbar}>
+            <div className={styles.topbar}>
               <Topbar />
             </div>
-            <div className={style.results}>
+            <div className={styles.results}>
               <Results />
             </div>
-            <div className={style.pagination}>
+            <div className={styles.pagination}>
               <Pagination />
             </div>
           </div>

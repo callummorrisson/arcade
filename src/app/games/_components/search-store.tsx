@@ -14,12 +14,13 @@ import GameDetailsModel from "@/data/models/game-details.model";
 const STORAGE_KEY = "product-list-params"; // params key for local storage
 
 // lookup for common query string params
-enum UrlQueryParam {
+export enum SearchUrlQueryParam {
   PageSize = "page-size",
   PageNumber = "page-num",
   SortBy = "sort-by",
   SortDirection = "sort-dir",
   Display = "display",
+  Keywords = "keywords"
 }
 
 export interface SearchParams extends SearchModel {
@@ -89,7 +90,7 @@ function StateManager({
 }: Readonly<{
   resultsFunc: (query: SearchModel) => Promise<SearchResultsModel>;
 }>) {
-  const { display, sortBy, sortAscending, pageSize, pageNumber, filters } =
+  const { display, sortBy, sortAscending, pageSize, pageNumber, filters, keywords } =
     useSearchParams((x: SearchParams) => x);
   const resultsUpdater = useProductResultsUpdater();
   const pathname = usePathname();
@@ -107,6 +108,7 @@ function StateManager({
         pageSize,
         pageNumber,
         filters,
+        keywords,
       }).then((val) => {
         if (isStale) return;
         resultsUpdater({
@@ -132,7 +134,26 @@ function StateManager({
     pageSize,
     pageNumber,
     filters,
+    keywords
   ]);
+
+  // update url query string on keywords change
+  useEffect(() => {
+    const urlSearchParams = new URL(window.location.toString()).searchParams;
+    let current: URLSearchParams;
+
+    if (keywords) {
+      current = new URLSearchParams(Array.from(urlSearchParams.entries()));
+      current.set(SearchUrlQueryParam.Keywords, keywords);
+    } else {
+      current =
+        new URLSearchParams(
+          Array.from(urlSearchParams.entries()).filter((x) => x[0] !== SearchUrlQueryParam.Keywords)
+        );
+    }
+
+    updateUrlQueryString(pathname, current);
+  }, [keywords]);
 
   // update url query string on filters change
   useEffect(() => {
@@ -164,11 +185,11 @@ function StateManager({
     const urlSearchParams = new URL(window.location.toString()).searchParams;
     const current = new URLSearchParams(Array.from(urlSearchParams.entries()));
 
-    current.set(UrlQueryParam.Display, display);
-    current.set(UrlQueryParam.SortBy, sortBy);
-    current.set(UrlQueryParam.SortDirection, sortAscending ? "asc" : "desc");
-    current.set(UrlQueryParam.PageSize, pageSize.toString());
-    current.set(UrlQueryParam.PageNumber, pageNumber.toString());
+    current.set(SearchUrlQueryParam.Display, display);
+    current.set(SearchUrlQueryParam.SortBy, sortBy);
+    current.set(SearchUrlQueryParam.SortDirection, sortAscending ? "asc" : "desc");
+    current.set(SearchUrlQueryParam.PageSize, pageSize.toString());
+    current.set(SearchUrlQueryParam.PageNumber, pageNumber.toString());
 
     updateUrlQueryString(pathname, current);
 
@@ -201,6 +222,7 @@ function getInitialParams(
 ): SearchParams {
   const defaultParams: SearchParams = {
     display: "grid",
+    keywords: "",
     filters: {},
     pageNumber: 1,
     pageSize: 12,
@@ -233,30 +255,32 @@ function readParamsFromUrlQuery(
   const filters = readFilterValuesFromUrlQuery(urlQueryParams);
   result.filters = filters;
 
-  if (urlQueryParams.has(UrlQueryParam.Display)) {
-    // todo bad "any", should validate properly
-    result.display = urlQueryParams.get(UrlQueryParam.Display)! as
+  if (urlQueryParams.has(SearchUrlQueryParam.Keywords)) {
+    result.keywords = urlQueryParams.get(SearchUrlQueryParam.Keywords)!;
+  }
+
+  if (urlQueryParams.has(SearchUrlQueryParam.Display)) {
+    result.display = urlQueryParams.get(SearchUrlQueryParam.Display)! as
       | "list"
       | "grid";
   }
 
-  if (urlQueryParams.has(UrlQueryParam.SortBy)) {
-    // todo bad "any", should validate properly
-    result.sortBy = urlQueryParams.get(UrlQueryParam.SortBy)! as string &
+  if (urlQueryParams.has(SearchUrlQueryParam.SortBy)) {
+    result.sortBy = urlQueryParams.get(SearchUrlQueryParam.SortBy)! as string &
       keyof GameDetailsModel;
   }
 
-  if (urlQueryParams.has(UrlQueryParam.SortDirection)) {
+  if (urlQueryParams.has(SearchUrlQueryParam.SortDirection)) {
     result.sortAscending =
-      urlQueryParams.get(UrlQueryParam.SortDirection) == "desc" ? false : true;
+      urlQueryParams.get(SearchUrlQueryParam.SortDirection) == "desc" ? false : true;
   }
 
-  const pageNumber = parseInt(urlQueryParams.get(UrlQueryParam.PageNumber)!);
+  const pageNumber = parseInt(urlQueryParams.get(SearchUrlQueryParam.PageNumber)!);
   if (pageNumber > 0) {
     result.pageNumber = pageNumber;
   }
 
-  const pageSize = parseInt(urlQueryParams.get(UrlQueryParam.PageSize)!);
+  const pageSize = parseInt(urlQueryParams.get(SearchUrlQueryParam.PageSize)!);
   if (pageSize > 0) {
     result.pageSize = pageSize;
   }

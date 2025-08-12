@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import style from "./radio-button-group.module.scss";
+import styles from "./radio-button-group.module.scss";
 
 export default function RadioButtons<T extends string | number | boolean>({
   options,
@@ -14,7 +14,7 @@ export default function RadioButtons<T extends string | number | boolean>({
         return (
           <label
             key={i}
-            className={`${style["option"]} ${!showRadio ? "hide-radio" : ""}`}
+            className={`${styles["option"]} ${!showRadio ? "hide-radio" : ""}`}
           >
             <input
               type="radio"

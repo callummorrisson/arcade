@@ -1,8 +1,9 @@
 "use client";
 
-import style from "./sidebar.module.scss";
-import { FilterComponent, unwrapFilterBuilder } from "../filterbuilder";
 import { useRef } from "react";
+
+import styles from "./sidebar.module.scss";
+import { FilterComponent, unwrapFilterBuilder } from "../filterbuilder";
 import { FieldFilters } from "@/data/models/search.model";
 import {
   SearchParams,
@@ -14,6 +15,7 @@ import GameDetailsModel from "@/data/models/game-details.model";
 
 export default function Sidebar() {
   const updateParams = useSearchParamsUpdater();
+  const keywords = useSearchParams((x: SearchParams) => x.keywords);
   const filterValues = useSearchParams((x: SearchParams) => x.filters);
   const [filters, labelMap] = useSearchSettings((x: SearchSettings) => [
     x.filters,
@@ -32,14 +34,23 @@ export default function Sidebar() {
   }
 
   function clearFilters() {
-    updateParams({ filters: {} });
+    updateParams({ keywords: '', filters: {} });
   }
 
   return (
-    <div className={style.sidebar}>
-      <h3>
-        Filters <button onClick={clearFilters}>Clear</button>
+    <div className={styles.sidebar}>
+      <h3 className={styles.header}>
+        <span>Filters</span>
+        <button className={styles["clear-button"]} onClick={clearFilters}>Clear</button>
       </h3>
+
+      <div>
+        <h4>Search</h4>
+        <div className={styles["keywords-filter"]}>
+          <input name="keywords" value={keywords} onChange={e => updateParams({ keywords: e.currentTarget.value.trim() })} />
+        </div>
+      </div>
+
       {filterDefinitions.current.map((x, i) => {
         const field = x.field;
         const Filter = x.component as FilterComponent<
@@ -48,7 +59,7 @@ export default function Sidebar() {
 
         return (
           <div key={i}>
-            <h3>{labelMap[x.field]}</h3>
+            <h4>{labelMap[x.field]}</h4>
             <Filter
               onChange={(val) => handleFilterChange(field, val)}
               value={

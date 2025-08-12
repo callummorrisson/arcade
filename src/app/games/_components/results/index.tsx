@@ -3,7 +3,7 @@
 import AutoScaleText from "@/components/auto-scale-text";
 import { useSearchParams, useSearchResults } from "../search-store";
 
-import style from "./results.module.scss";
+import styles from "./results.module.scss";
 import { GameCoverImage } from "@/components/game-cover-image";
 
 export default function Results() {
@@ -12,27 +12,27 @@ export default function Results() {
 
   return (
     <div
-      className={`${style["results-container"]} ${style["results-" + display]}`}
+      className={`${styles["results-container"]} ${styles["results-" + display]}`}
     >
       {results.map((x, i) => (
-        <div className={style.item} key={i}>
-          <div className={style["item-summary"]}>
-            <div className={style["item-thumbnail"]}>
+        <div className={styles.item} key={i}>
+          <div className={styles["item-summary"]}>
+            <div className={styles["item-thumbnail"]}>
               <GameCoverImage
                 gameFolder={x.gameFolder}
                 coverExtension={x.coverExtension}
-                className={style["item-thumbnail"]}
+                className={styles["item-thumbnail"]}
               />
             </div>
-            <div className={style["item-summary-name"]}>
+            <div className={styles["item-summary-name"]}>
               <AutoScaleText text={x.name} />
             </div>
           </div>
 
-          <div className={style["item-details"]}>
-            <span className={style["item-name"]}>{x.name}</span>
-            <span className={style["item-description"]}>{x.description}</span>
-            <span className={style["item-created-date"]}>
+          <div className={styles["item-details"]}>
+            <span className={styles["item-name"]}>{x.name}</span>
+            <span className={styles["item-description"]}>{x.description}</span>
+            <span className={styles["item-created-date"]}>
               {x.createdDate.toLocaleDateString()}
             </span>
           </div>

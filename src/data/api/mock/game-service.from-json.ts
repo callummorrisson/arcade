@@ -17,7 +17,17 @@ export class GameServiceFromJson implements GameServiceContract {
 
   async search(query: SearchModel): Promise<SearchResultsModel> {
     const data = await this.getFromJson();
-    const filtered = data.filter((x) =>
+
+    let keywordMatches: typeof data;
+    if (query.keywords) {
+      // note: this is pretty rubbish performance wise, will have to revisist if dataset gets too big.
+      const keywords = query.keywords.trim().split(' ').filter(x => x).map(x => x.toLowerCase());
+      keywordMatches = data.filter(x => keywords.every(k => x.name.toLowerCase().includes(k) || x.description.toLowerCase().includes(k)));
+    } else {
+      keywordMatches = data;
+    }
+
+    const filtered = keywordMatches.filter((x) =>
       Object.entries(query.filters).every(([field, filters]) =>
         Object.entries(filters).every(([operator, filterValue]) => {
           const val = x[field as keyof GameDetailsModel];
@@ -92,7 +102,7 @@ export class GameServiceFromJson implements GameServiceContract {
     const json = await fetch(`${this.baseUrl}/games.db.json`);
     const data: GameDatabaseModel[] = await json.json();
 
-    // replacement of createdDate stirng with Date
+    // replacement of createdDate string with Date
     return data.map<GameDetailsModel>((x) => ({
       ...x,
       createdDate: new Date(x.createdDate),

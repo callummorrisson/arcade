@@ -6,7 +6,7 @@ import {
   useSearchResults,
 } from "../search-store";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
-import style from "./pagination.module.scss";
+import styles from "./pagination.module.scss";
 import Dropdown from "@/components/dropdown";
 
 const PAGE_SIZES = [3, 12, 24, 60, 120];
@@ -35,13 +35,13 @@ export default function Pagination() {
   ).filter((x, i, a) => x || a[i - 1]);
 
   return (
-    <div className={style.pagination}>
-      <div className={style.total}>
+    <div className={styles.pagination}>
+      <div className={styles.total}>
         {firstItem} - {lastItem} of {totalResults}
       </div>
-      <div className={style.pages}>
+      <div className={styles.pages}>
         <button
-          className={`${style.page} ${style["page-prev"]}`}
+          className={`${styles.page} ${styles["page-prev"]}`}
           disabled={pageNumber === 1}
           onClick={() => updateParams({ pageNumber: pageNumber - 1 })}
         >
@@ -52,27 +52,27 @@ export default function Pagination() {
             <button
               onClick={() => updateParams({ pageNumber: x })}
               key={i}
-              className={`${style.page} ${
-                x === pageNumber ? style["current-page"] : ""
+              className={`${styles.page} ${
+                x === pageNumber ? styles["current-page"] : ""
               }`}
             >
               {x}
             </button>
           ) : (
-            <span key={i} className={`${style.page} ${style["page-gap"]}`}>
+            <span key={i} className={`${styles.page} ${styles["page-gap"]}`}>
               …
             </span>
           )
         )}
         <button
-          className={`${style.page} ${style["page-next"]}`}
+          className={`${styles.page} ${styles["page-next"]}`}
           disabled={pageNumber === numPages}
           onClick={() => updateParams({ pageNumber: pageNumber + 1 })}
         >
           <IoMdArrowDropright />
         </button>
       </div>
-      <div className={style["page-size"]}>
+      <div className={styles["page-size"]}>
         <Dropdown<number>
           items={PAGE_SIZES.map((x) => ({ label: x, value: x }))}
           selected={pageSize}

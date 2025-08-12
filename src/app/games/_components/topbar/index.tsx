@@ -9,7 +9,7 @@ import {
   useSearchParams,
   useSearchParamsUpdater,
 } from "../search-store";
-import style from "./topbar.module.scss";
+import styles from "./topbar.module.scss";
 import Dropdown from "@/components/dropdown";
 import { SearchSettings, useSearchSettings } from "../settings-store";
 
@@ -25,8 +25,8 @@ export default function Topbar() {
   const sortList = sortOptions.map((x) => ({ label: labelMap[x], value: x }));
 
   return (
-    <div className={style.topbar}>
-      <div className={style.display}>
+    <div className={styles.topbar}>
+      <div className={styles.display}>
         <label>
           <input
             type="radio"
@@ -49,13 +49,13 @@ export default function Topbar() {
         </label>
       </div>
 
-      <div className={style.sort}>
+      <div className={styles.sort}>
         <Dropdown
           items={sortList}
           onChange={(val) => updateParams({ sortBy: val, pageNumber: 1 })}
           selected={sortBy}
         />
-        <label className={style.checkbox}>
+        <label className={styles["sort-direction"]}>
           <input
             type="checkbox"
             checked={sortAscending}

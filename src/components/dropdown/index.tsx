@@ -1,7 +1,7 @@
 "use client";
 
 import RadioButtons from "../radio-buttons";
-import style from "./dropdown.module.scss";
+import styles from "./dropdown.module.scss";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function Dropdown<T extends string | number>({
@@ -11,13 +11,13 @@ export default function Dropdown<T extends string | number>({
 }: Readonly<DropdownProps<T>>) {
   const selectedLabel = items.find((x) => x.value === selected)?.label;
   return (
-    <div className={style.dropdown} tabIndex={0}>
-      <div className={style["current-option"]}>
+    <div className={styles.dropdown} tabIndex={0}>
+      <div className={styles["current-option"]}>
         <span>{selectedLabel || "--select one--"}</span>
         <FaChevronDown />
       </div>
-      <div className={style["options-container"]}>
-        <div className={style.options}>
+      <div className={styles["options-container"]}>
+        <div className={styles.options}>
           <RadioButtons
             options={items}
             showRadio={false}

@@ -7,6 +7,7 @@ export interface SearchModel {
   pageSize: number;
   pageNumber: number;
 
+  keywords: string;
   filters: QueryFilters;
 }
 

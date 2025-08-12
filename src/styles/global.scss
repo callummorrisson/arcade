@@ -1,5 +1,4 @@
-@import './variables';
-@import './reset';
+@use './reset' as *;
 
 html,
 body {
