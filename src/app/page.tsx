@@ -1,11 +1,11 @@
 "use client";
 import useDataService from "@/data/api/use-data-service";
 import { useEffect, useState } from "react";
-import { GameDetails } from "@/data/types/game-details";
 import Link from "next/link";
+import GameDetailsModel from "@/data/models/game-details.model";
 
 export default function Home() {
-  const [games, setGames] = useState<GameDetails[]>([]);
+  const [games, setGames] = useState<GameDetailsModel[]>([]);
   const gameService = useDataService((x) => x.games);
 
   useEffect(() => {

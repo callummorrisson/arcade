@@ -48,7 +48,7 @@ function SvgLogo() {
       <g name="c" transform={`translate(${2 * (characterWidth + kerning)},0)`}>
         <path
           d={`M ${radius + centerX} ${centerY} 
-              A ${radius} ${radius} 0 1 0 ${centerX} ${baseline}}`}
+              A ${radius} ${radius} 0 1 0 ${centerX} ${baseline}`}
         />
       </g>
       <g name="a" transform={`translate(${3 * (characterWidth + kerning)},0)`}>
@@ -73,7 +73,7 @@ function SvgLogo() {
         <path
           d={`M ${halfStroke} ${centerY} 
               L ${radius + centerX} ${centerY} 
-              A ${radius} ${radius} 0 1 0 ${centerX} ${baseline}}`}
+              A ${radius} ${radius} 0 1 0 ${centerX} ${baseline}`}
         />
       </g>
     </svg>

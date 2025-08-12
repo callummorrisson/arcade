@@ -1,6 +1,11 @@
-import { GameDetails } from "../types/game-details";
+import GameDetailsModel from "../models/game-details.model";
+import { SearchModel } from "../models/search.model";
+import { SearchResultsModel } from "../models/search-results.model";
 
 export default interface GameServiceContract {
-  getAll(): Promise<GameDetails[]>;
-  getGameDetails(gameId: string): Promise<GameDetails | undefined>;
+  getAll(): Promise<GameDetailsModel[]>;
+  search(
+    query: SearchModel
+  ): Promise<SearchResultsModel>;
+  getGameDetails(gameId: string): Promise<GameDetailsModel | undefined>;
 }

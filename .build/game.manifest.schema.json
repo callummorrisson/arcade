@@ -7,7 +7,18 @@
       "description": "Unique id for this game, will be used in the URL"
     },
     "name": { "type": "string" },
-    "description": { "type": "string" }
+    "description": { "type": "string" },
+    "createdDate": { "type": "string", "format": "date" },
+    "controlOptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["mouse", "keyboard", "mouse-and-keyboard", "midi", "gamepad"],
+        "uniqueItems": true
+      },
+      "minItems": 1
+    }
   },
-  "required": ["id", "name", "description"]
+  "additionalProperties": false,
+  "required": ["id", "name", "description", "createdDate", "controlOptions"]
 }

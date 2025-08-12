@@ -5,7 +5,7 @@ import { resolve } from "path";
 export default class WatchExecutePlugin {
   /**
    *
-   * @param {string} watchPattern
+   * @param {string | string[]} watchPattern
    * @param {(changed: ReadonlySet<string>) => void} toExecuteForAny
    * @param {(changed: string) => void} toExecuteForEach
    */

@@ -1,9 +1,10 @@
 import Game from "./game";
 import gamesDb from '@/../public/games.db.json';
 
-type GamePageParams = { gameId: string };
+interface GamePageParams { gameId: string };
 
-export default function GamePage({ params }: { params: GamePageParams }) {
+export default async function GamePage(props: { params: Promise<GamePageParams> }) {
+  const params = await props.params;
   return (
     <>
     <h2>{params.gameId}</h2>

@@ -1,0 +1,152 @@
+.results-container {
+  width: 100%;
+  height: 100%;
+  gap: 0.25rem;
+
+  > .item {
+    display: grid;
+    gap: 0.25rem;
+    padding: .25rem;
+    background: $bg-input;
+    border-radius: 0.25rem;
+
+    .item-thumbnail {
+      grid-area: thumb;
+      aspect-ratio: 1/1;
+      border-radius: 0.25rem;
+      overflow: hidden;
+
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .item-name {
+      grid-area: name;
+      font-weight: bold;
+    }
+
+    .item-summary-name {
+      grid-area: summary-name;
+      font-weight: bold;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      svg {
+        max-height: 100%;
+        max-width: 100%;
+      }
+    }
+
+    .item-description {
+      grid-area: description;
+      text-overflow: ellipsis;
+      
+      display: -webkit-box;
+      line-clamp: var(--descripton-max-lines);
+      -webkit-line-clamp: var(--descripton-max-lines);
+      -webkit-box-orient: vertical;
+      max-height: calc(var(--descripton-max-lines) * 1.1em);
+      overflow-y: hidden;
+    }
+
+    .item-created-date {
+      grid-area: created-date;
+    }
+
+    &:hover {
+      background: $bg-input-hover;
+    }
+  }
+
+  &.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: min-content;
+
+    --descripton-max-lines: 5;
+
+    > .item {
+      grid-template-areas:
+        "thumb"
+        "summary-name";
+
+      grid-template-rows: auto 2em;
+
+      position: relative;
+
+      .item-summary {
+        display: contents;
+      }
+
+      .item-thumbnail {
+        aspect-ratio: 5 / 6;
+      }
+
+      .item-details {
+        z-index: 1000;
+        display: grid;
+        position: absolute;
+        top: 10%;
+        left: 50%;
+
+        padding: 0.5em;
+        border-radius: 0.5em;
+
+        width: 100%;
+
+        grid-template-areas:
+          "name "
+          "created-date"
+          "description ";
+
+        background: $bg-popover;
+        color: $fg-popover;
+        backdrop-filter: blur(10px);
+      }
+
+      &:not(:hover) {
+        .item-details {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.results-list {
+    display: flex;
+    flex-direction: column;
+
+    --descripton-max-lines: 2;
+
+    > .item {
+      grid-template-areas:
+        "thumb name created-date"
+        "thumb description description";
+      grid-template-columns: auto 1fr 1fr;
+
+      .item-summary-name {
+        display: none;
+      }
+
+      .item-summary {
+        display: contents;
+      }
+
+      .item-details {
+        display: contents;
+      }
+
+      .item-thumbnail {
+        max-height: 4rem;
+        max-width: 4rem;
+      }
+    }
+  }
+}

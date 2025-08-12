@@ -1,0 +1,72 @@
+@import "/src/styles/variables";
+
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.display {
+  display: flex;
+  flex-direction: row;
+
+  input[type="radio"] {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  label {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+
+    cursor: pointer;
+
+    background: $bg-input;
+    color: $fg-input;
+
+    & ~ label {
+      margin-left: 0.25rem;
+    }
+
+    &:hover {
+      background: $bg-input-hover;
+      color: $fg-input-hover;
+    }
+
+    &:has(input:checked) {
+      cursor: default;
+
+      background: $bg-input-selected;
+      color: $fg-input-selected;
+    }
+  }
+}
+
+.sort {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  .sort-direction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin-left: .25rem;
+    background: $bg-input;
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      background: $bg-input-hover;
+    }
+  }
+}

@@ -3,18 +3,22 @@ import Ajv from "ajv";
 import * as path from "path";
 import WatchExecutePlugin from "./watch-execute.plugin.mjs";
 import { globSync } from "glob";
+import { getManifestSchema } from "./plugin-shared.mjs";
+
+// note: file paths are all relative to root
+const schemaFileName = "./.build/game.manifest.schema.json";
+const manifestGlob = "./src/games/*/game.manifest.json";
+const dbFilePath = "./public/games.db.json";
 
 export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
   constructor() {
-    super("./src/games/*/game.manifest.json", () => this.#generateDb());
+    super([schemaFileName, manifestGlob], () => this.#generate());
 
-    this.dbFilePath = "./public/games.db.json";
-
-    // hack: call once on first compile
-    this.#generateDb();
+    // hack: call once on first compile - means build server will always execute
+    this.#generate();
   }
 
-  #generateDb() {
+  #generate() {
     // get a list of all games (games without valid manifests are ignored)
     const gameManifests = this.#getGameManifests();
 
@@ -32,11 +36,11 @@ export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
     const json = JSON.stringify(gameManifests, null, 2);
 
     // ensure directory exists
-    if (!fs.existsSync(path.dirname(this.dbFilePath))) {
-      fs.mkdirSync(path.dirname(this.dbFilePath));
+    if (!fs.existsSync(path.dirname(dbFilePath))) {
+      fs.mkdirSync(path.dirname(dbFilePath));
     }
-    // write to this.dbFilePath
-    fs.writeFileSync(this.dbFilePath, json, { encoding: "utf8" });
+    // write to file
+    fs.writeFileSync(dbFilePath, json, { encoding: "utf8" });
   }
 
   #hasDuplicates(gameManifests) {
@@ -56,10 +60,10 @@ export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
   }
 
   #getGameManifests() {
-    const manifestSchema = this.#getManifestSchema();
+    const manifestSchema = getManifestSchema(schemaFileName);
     const schemaValidator = new Ajv().compile(manifestSchema);
 
-    const manifestFiles = this.getWatchedFiles();
+    const manifestFiles = globSync(manifestGlob).map((x) => path.resolve(x));
     const gameManifests = [];
 
     for (const manifestFile of manifestFiles) {
@@ -72,7 +76,7 @@ export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
       gameManifests.push({
         ...manifest,
         coverExtension,
-        gameFolder: path.basename(gameFolder)
+        gameFolder: path.basename(gameFolder),
       });
     }
 
@@ -101,32 +105,10 @@ export default class GameDbGeneratorPlugin extends WatchExecutePlugin {
     if (!valid) {
       console.error(
         `INVALID GAME MANIFEST: ${filePath}`,
-        schemaValidator.errors.map((e) => e.message)
+        validator.errors.map((e) => e.message)
       );
     }
 
     return manifest;
-  }
-
-  #getManifestSchema() {
-    const schemaFileName = "./.build/game.manifest.schema.json";
-
-    // expect schema to in the root of the repo
-    const schemaPath = path.resolve(".", schemaFileName);
-    if (!fs.existsSync(schemaPath)) {
-      throw `COULD NOT FIND GAME MANIFEST SCHEMA: ${schemaPath}`;
-    }
-
-    const raw = fs.readFileSync(schemaPath);
-
-    let manifestSchema;
-    try {
-      manifestSchema = JSON.parse(raw);
-    } catch (e) {
-      // TODO dunno if Error.cause is supported in node??
-      throw new Error("INVALID GAME MANIFEST SCHEMA", { cause: e });
-    }
-
-    return manifestSchema;
   }
 }

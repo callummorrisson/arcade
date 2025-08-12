@@ -2,16 +2,40 @@
   --bg-main: #ffffff;
   --fg-main: #171717;
 
-  --bg-menu: #f7f7f7;
-  --fg-menu: #171717;
+  --bg-popover: #f7f7f7;
+  --fg-popover: #171717;
+
+  --bg-input: #f7f7f788;
+  --fg-input: #171717;
+
+  --bg-input-hover: #f7f7f7;
+  --fg-input-hover: #171717;
+
+  --bg-input-selected: #f7f7f7;
+  --fg-input-selected: #171717;
+
+  --bg-input-disabled: #f7f7f7;
+--fg-input-disabled: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-main: #0a0a0a;
+    --bg-main: #070707;
     --fg-main: #ededed;
 
-    --bg-menu: #1a1a1a;
-    --fg-menu: #ededed;
+    --bg-popover: #0c0c0c88;
+    --fg-popover: #ededed;
+
+    --bg-input: #0c0c0c;
+    --fg-input: #ededed;
+
+    --bg-input-hover: #171717;
+    --fg-input-hover: #ededed;
+
+    --bg-input-selected: #1c1c1c;
+    --fg-input-selected: #fefefe;
+
+    --bg-input-disabled: #111;
+    --fg-input-disabled: #333;
   }
 }

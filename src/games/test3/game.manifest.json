@@ -1,5 +1,7 @@
 {
-    "id": "test3",
-    "name": "Test Three",
-    "description": "Testing that this does stuff"
+  "id": "test3",
+  "name": "Test 3 - This game has a longer than probably expected name",
+  "description": "Short Description",
+  "createdDate": "2024-10-17",
+  "controlOptions": ["mouse", "keyboard", "mouse-and-keyboard"]
 }
