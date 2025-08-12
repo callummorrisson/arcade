@@ -169,10 +169,9 @@ function StateManager({
     for (field in filters) {
       const fieldFilters = filters[field]!;
 
-      let operator: keyof typeof fieldFilters;
-      for (operator in fieldFilters) {
+      for (const operator in fieldFilters) {
         const key = `f-${field}-${operator}`;
-        const value = filters[field]![operator];
+        const value = filters[field]![operator as keyof typeof fieldFilters];
         current.set(key, JSON.stringify(value));
       }
     }
@@ -302,8 +301,9 @@ function readFilterValuesFromUrlQuery(
       const parsedValue = JSON.parse(value);
 
       const field = split[1] as keyof typeof result;
-      const fieldObj = result[field] || (result[field] = {});
-      const operator = split[2] as keyof typeof fieldObj;
+      // todo: this is gross..
+      const fieldObj: Record<string, unknown> = result[field] || (result[field] = {});
+      const operator = split[2];
 
       fieldObj[operator] = parsedValue;
     } catch {

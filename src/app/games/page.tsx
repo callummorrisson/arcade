@@ -8,7 +8,7 @@ import styles from "./page.module.scss";
 import useDataService from "@/data/api/use-data-service";
 import { SearchParams, SearchProvider } from "./_components/search-store";
 import { SearchSettings, SearchSettingsProvider } from "./_components/settings-store";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { SearchModel } from "@/data/models/search.model";
 import FilterBuilder from "./_components/filterbuilder";
 import Filters from "./_components/filters";
