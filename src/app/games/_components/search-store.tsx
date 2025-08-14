@@ -67,7 +67,7 @@ export function SearchProvider({
   const searchParams = useURLSearchParams();
   const initialValue = getInitialParams(searchParams, initialParams);
   return (
-    <SearchParamsStore.Provider initialValue={initialValue as SearchParams}>
+    <SearchParamsStore.Provider initialValue={initialValue}>
       <ResultsStore.Provider initialValue={getInitialResults()}>
         <StateManager resultsFunc={resultsFunc} />
         {children}
@@ -153,7 +153,7 @@ function StateManager({
     }
 
     updateUrlQueryString(pathname, current);
-  }, [keywords]);
+  }, [pathname, keywords]);
 
   // update url query string on filters change
   useEffect(() => {
@@ -177,7 +177,7 @@ function StateManager({
     }
 
     updateUrlQueryString(pathname, current);
-  }, [filters]);
+  }, [pathname, filters]);
 
   // update url query string and localStorage when display, sorting, or paging options change
   useEffect(() => {
@@ -197,7 +197,7 @@ function StateManager({
       STORAGE_KEY,
       JSON.stringify({ display, sortBy, sortAscending, pageSize })
     );
-  }, [display, sortBy, sortAscending, pageSize, pageNumber]);
+  }, [pathname, display, sortBy, sortAscending, pageSize, pageNumber]);
 
   return <></>;
 }

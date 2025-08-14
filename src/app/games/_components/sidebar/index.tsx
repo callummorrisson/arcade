@@ -47,7 +47,7 @@ export default function Sidebar() {
       <div>
         <h4>Search</h4>
         <div className={styles["keywords-filter"]}>
-          <input name="keywords" value={keywords} onChange={e => updateParams({ keywords: e.currentTarget.value.trim() })} />
+          <input name="keywords" value={keywords} onChange={e => updateParams({ keywords: e.currentTarget.value })} />
         </div>
       </div>
 
